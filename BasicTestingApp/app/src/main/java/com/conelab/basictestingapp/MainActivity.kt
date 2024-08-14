@@ -1,8 +1,11 @@
 package com.conelab.basictestingapp
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -21,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.conelab.basictestingapp.georeference.Georeference
@@ -28,6 +32,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 class MainActivity : FragmentActivity() {
+    private val REQUEST_NOTIFICATION_PERMISSION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +42,28 @@ class MainActivity : FragmentActivity() {
                 MainScreen()
             }
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    REQUEST_NOTIFICATION_PERMISSION
+                );
+            }
+        } else {
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BROADCAST_NOTIFICATION)
+//                != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(
+//                    this,
+//                    arrayOf(Manifest.permission.BROADCAST_NOTIFICATION),
+//                    REQUEST_NOTIFICATION_PERMISSION
+//                );
+//            }
+        }
+
+
     }
 
     @OptIn(ExperimentalPermissionsApi::class)
@@ -97,6 +124,13 @@ class MainActivity : FragmentActivity() {
                     checkFingerprintAuthentication { isAuthInProgress.value = false }
                 }) {
                     Text(text = "Lector de huellas")
+                }
+
+                Button(
+                    onClick = {
+                        simulateNotification()}
+                ){
+                    Text(text = "Notificacion")
                 }
             }
 
@@ -203,7 +237,28 @@ class MainActivity : FragmentActivity() {
         biometricPrompt.authenticate(promptInfo)
     }
 
+    private fun simulateNotification(){
+        val intent = Intent(this, NotificationReceiver::class.java).apply {
+            putExtra("title", "Simulated Title")
+            putExtra("message", "This is a simulated notification.")
+        }
+        sendBroadcast(intent)
+    }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                // El permiso fue concedido
+            } else {
+                // El permiso fue denegado
+            }
+        }
+    }
 
 }
 

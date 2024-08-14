@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "659847948477",
+    "project_id": "basic-testing-app",
+    "storage_bucket": "basic-testing-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659847948477:android:6b5694224106323ab46fd4",
+        "android_client_info": {
+          "package_name": "com.conelab.basictestingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHPVac1EH3xxIb8T7zIig8vkyMZ6T2rxk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

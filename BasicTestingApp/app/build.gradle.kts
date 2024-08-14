@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.gms.google-services") //Push
 }
 
 android {
@@ -60,6 +61,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.fragment.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -76,4 +78,10 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.28.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
+
+    //Push notifications
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-analytics")
+//    implementation("com.google.firebase:firebase-messaging:24.0.0")
+    implementation(libs.firebase.messaging.ktx)
 }
